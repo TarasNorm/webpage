@@ -438,7 +438,7 @@
       /* 1. Зсув фото в hero-блоці трохи правіше на телефоні,
             на ПК фото лишається по центру (правило вище не чіпаємо) */
       .hero-bg {
-        background-position: 70% center;
+        background-position: 30% center;
       }
 
       /* 2. На мобільному sticky-секції: картинка закріплюється ЗВЕРХУ,
@@ -450,11 +450,13 @@
 
       .sticky-section.left-image .sticky-image-col,
       .sticky-section.right-image .sticky-image-col {
-        position: relative;
+        position: sticky;
+        top: 0;
         width: 100%;
         height: 45vh;
         flex-shrink: 0;
-        order: 1 !important;
+        order: 0 !important;
+        z-index: 1;
       }
 
       .sticky-section.left-image .scroll-text-col,
@@ -463,8 +465,11 @@
         z-index: 2;
         width: 100%;
         padding: 2.5rem 6vw 4rem 6vw;
-        order: 0 !important;
+        order: 1 !important;
         background: var(--ivory);
+        border-radius: 20px 20px 0 0;
+        margin-top: -20px;
+        box-shadow: 0 -8px 24px rgba(0,0,0,0.08);
       }
 
       .sticky-section.right-image .sticky-image-col {
