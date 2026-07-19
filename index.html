@@ -463,12 +463,13 @@
         background-position: 30% center;
       }
 
-      /* 2. На мобільному sticky-секції перетворюються на звичайний потік:
+      /* 2. На мобільному sticky-секції перетворюються на колонку:
             спочатку ТЕКСТ, а фото йде ПІД ним окремим блоком нижче.
-            (sticky тут не потрібен — колонка вже не поруч з текстом, а після нього) */
+            ВАЖЛИВО: контейнер має лишатись display:flex (не block) —
+            властивість order працює тільки у flex/grid-контейнерах,
+            інакше елементи показуються в порядку, як записані в HTML. */
       .sticky-section {
         flex-direction: column !important;
-        display: block; /* прибираємо flex, працюємо як звичайний потік */
       }
 
       .sticky-section.left-image .scroll-text-col,
@@ -488,10 +489,6 @@
         flex-shrink: 0;
         order: 1 !important; /* фото другим, під текстом */
         z-index: 1;
-        border-radius: 20px;
-        overflow: hidden;
-        margin: 0 6vw 3rem 6vw;
-        width: calc(100% - 12vw);
       }
 
       .sticky-section.right-image .sticky-image-col {
