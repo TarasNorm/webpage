@@ -2,10 +2,12 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="theme-color" content="#1a1208">
   <title>Запрошення на Весілля</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
 
   <style>
@@ -19,6 +21,8 @@
       --text: #2e2212;
       --text-light: #6b5a3e;
       --rose: #c4857a;
+      /* fallback + сучасне значення висоти екрана */
+      --vh100: 100vh;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,12 +34,15 @@
       color: var(--text);
       font-family: 'EB Garamond', Georgia, serif;
       overflow-x: hidden;
+      /* прибирає "затримку" 300мс перед реакцією на тап на touch-пристроях */
+      touch-action: manipulation;
     }
 
     /* ── HERO ── */
     .hero {
       position: relative;
-      height: 100vh;
+      height: var(--vh100);
+      height: 100svh; /* коректна висота без стрибків через адресний рядок мобільного браузера */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -48,8 +55,8 @@
       background:
         linear-gradient(180deg, rgba(26,18,8,0.7) 0%, rgba(26,18,8,0.55) 50%, rgba(26,18,8,0.8) 100%),
         url('images/hedding.jpg') center/cover no-repeat;
-      transform: scale(1.05);
-      transition: transform 0.1s linear;
+      transform: translateZ(0) scale(1.05);
+      will-change: transform;
     }
 
     .hero-content {
@@ -301,7 +308,8 @@
       border-radius: 2px;
       color: var(--ivory);
       font-family: 'EB Garamond', serif;
-      font-size: 1rem;
+      /* мінімум 16px — інакше iOS Safari автоматично зумить сторінку при фокусі на полі */
+      font-size: 16px;
       transition: border-color 0.3s, background 0.3s;
       outline: none;
     }
@@ -326,19 +334,25 @@
       align-items: center;
       gap: 0.8rem;
       padding: 0.8rem 1.2rem;
+      /* мінімальна висота тап-зони 44px за рекомендаціями Apple/Google */
+      min-height: 44px;
       border: 1px solid rgba(201,168,76,0.2);
       cursor: pointer;
       transition: border-color 0.3s, background 0.3s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    .radio-option:hover {
+    .radio-option:hover,
+    .radio-option:active {
       border-color: var(--gold);
       background: rgba(201,168,76,0.05);
     }
 
     .radio-option input[type="radio"] {
       accent-color: var(--gold);
-      width: 16px; height: 16px;
+      width: 20px; height: 20px;
+      flex-shrink: 0;
     }
 
     .radio-option span {
@@ -360,6 +374,7 @@
       transition: background 0.4s, color 0.4s;
       margin-top: 1rem;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     .submit-btn:hover,
@@ -432,6 +447,13 @@
       transform: translateY(0);
     }
 
+    /* ── ПОВАГА ДО НАЛАШТУВАНЬ ДОСТУПНОСТІ ── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero-content, .fade-in-up, .scroll-hint { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+      .hero-bg { transform: none !important; }
+    }
+
     /* ── RESPONSIVE (MOBILE) ── */
     @media (max-width: 768px) {
 
@@ -475,6 +497,25 @@
       .sticky-section.right-image .sticky-image-col {
         clip-path: none !important;
       }
+
+      /* 3. Менші відступи в info-block на вузьких екранах — на телефоні
+            попередні 1.5rem padding з'їдають забагато місця під текст */
+      .info-block {
+        padding: 1.1rem;
+        gap: 0.8rem;
+      }
+
+      /* 4. Форма — трохи менше вертикальних відступів між полями,
+            щоб довга анкета не розтягувалась на весь екран */
+      .form-group {
+        margin-bottom: 1.4rem;
+      }
+    }
+
+    /* Дуже вузькі екрани (старі/маленькі телефони) */
+    @media (max-width: 360px) {
+      .hero-content { padding: 1.2rem; }
+      .divider-line { width: 50px; }
     }
   </style>
 </head>
@@ -502,7 +543,15 @@
   <!-- ═══════════ SECTION 1 — Left image, Right text ═══════════ -->
   <section class="sticky-section left-image">
     <div class="sticky-image-col">
-      <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1000&q=80" alt="Весілля">
+      <img
+        src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1000&q=80"
+        srcset="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=600&q=75 600w,
+                https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1000&q=80 1000w,
+                https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1600&q=80 1600w"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        alt="Весілля"
+        loading="eager"
+        decoding="async">
     </div>
     <div class="scroll-text-col">
       <div class="fade-in-up">
@@ -578,7 +627,15 @@
       </p>
     </div>
     <div class="sticky-image-col">
-      <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&q=80" alt="Весільний банкет">
+      <img
+        src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&q=80"
+        srcset="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=75 600w,
+                https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&q=80 1000w,
+                https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1600&q=80 1600w"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        alt="Весільний банкет"
+        loading="lazy"
+        decoding="async">
     </div>
   </section>
 
@@ -591,7 +648,7 @@
       <div id="surveyForm">
         <div class="form-group">
           <label class="form-label" for="name">Ваше ім'я та прізвище</label>
-          <input class="form-input" type="text" id="name" placeholder="Іваненко Іван Іванович">
+          <input class="form-input" type="text" id="name" placeholder="Іваненко Іван Іванович" autocomplete="name">
         </div>
 
         <div class="form-group">
@@ -668,12 +725,28 @@
   </footer>
 
   <script>
-    // ── Parallax hero ──
-    window.addEventListener('scroll', () => {
+    // ── Визначаємо, чи це touch-пристрій / вузький екран,
+    //    щоб не вантажити CPU на parallax там, де він майже непомітний ──
+    const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const enableParallax = !isSmallScreen && !prefersReducedMotion;
+
+    // ── Parallax hero (throttled через requestAnimationFrame) ──
+    if (enableParallax) {
       const heroBg = document.getElementById('heroBg');
-      const scrollY = window.scrollY;
-      heroBg.style.transform = `scale(1.05) translateY(${scrollY * 0.3}px)`;
-    });
+      let ticking = false;
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const scrollY = window.scrollY;
+            heroBg.style.transform = `translateZ(0) scale(1.05) translateY(${scrollY * 0.3}px)`;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+    }
 
     // ── Reveal right image when section enters viewport ──
     const rightSection = document.getElementById('rightSection');
