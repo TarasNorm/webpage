@@ -463,35 +463,35 @@
         background-position: 30% center;
       }
 
-      /* 2. На мобільному sticky-секції: картинка закріплюється ЗВЕРХУ,
-            а не збоку, текст прокручується під нею окремим блоком */
+      /* 2. На мобільному sticky-секції перетворюються на звичайний потік:
+            спочатку ТЕКСТ, а фото йде ПІД ним окремим блоком нижче.
+            (sticky тут не потрібен — колонка вже не поруч з текстом, а після нього) */
       .sticky-section {
         flex-direction: column !important;
         display: block; /* прибираємо flex, працюємо як звичайний потік */
       }
 
-      .sticky-section.left-image .sticky-image-col,
-      .sticky-section.right-image .sticky-image-col {
-        position: sticky;
-        top: 0;
-        width: 100%;
-        height: 45vh;
-        flex-shrink: 0;
-        order: 0 !important;
-        z-index: 1;
-      }
-
       .sticky-section.left-image .scroll-text-col,
       .sticky-section.right-image .scroll-text-col {
         position: relative;
-        z-index: 2;
         width: 100%;
-        padding: 2.5rem 6vw 4rem 6vw;
-        order: 1 !important;
+        padding: 3rem 6vw 2.5rem 6vw;
+        order: 0 !important; /* текст першим */
         background: var(--ivory);
-        border-radius: 20px 20px 0 0;
-        margin-top: -20px;
-        box-shadow: 0 -8px 24px rgba(0,0,0,0.08);
+      }
+
+      .sticky-section.left-image .sticky-image-col,
+      .sticky-section.right-image .sticky-image-col {
+        position: relative; /* більше не sticky — картинка просто йде після тексту */
+        width: 100%;
+        height: 45vh;
+        flex-shrink: 0;
+        order: 1 !important; /* фото другим, під текстом */
+        z-index: 1;
+        border-radius: 20px;
+        overflow: hidden;
+        margin: 0 6vw 3rem 6vw;
+        width: calc(100% - 12vw);
       }
 
       .sticky-section.right-image .sticky-image-col {
